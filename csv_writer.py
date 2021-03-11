@@ -1,5 +1,6 @@
 from openpyxl import Workbook
 import csv
+import os.path
 
 csv_rowlist = [["Member ID", "Last Name", "First Name", "Phone Number", "Email", "Paid (Y/N)",
                 "Pledged Amount", "Paid Amount"],
@@ -11,12 +12,25 @@ csv_rowlist = [["Member ID", "Last Name", "First Name", "Phone Number", "Email",
                ]
 wb = Workbook()
 ws = wb.active
-with open('Member Dues List.csv', mode='w', newline='') as file:
+
+while True:
+    filename = input("Enter the name of the file you wish to write to (Type Q to quit): ")
+    file_exists = os.path.isfile(filename)
+
+    if filename in ["Q", "q"]:
+        print("Terminating program.")
+        quit()
+
+    if file_exists:
+        break
+    else:
+        print("Invalid file name. Please try again")
+
+with open(filename, mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerows(csv_rowlist)
 
-with open('Member Dues List.csv', mode='r') as file:
+with open(filename, mode='r') as file:
     for row in csv.reader(file):
         ws.append(row)
 wb.save('Member Dues.xlsx')
-
